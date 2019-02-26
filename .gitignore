@@ -1,0 +1,4 @@
+src/*
+prod/*
+.DS_Store
+vendor

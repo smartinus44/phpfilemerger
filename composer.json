@@ -1,0 +1,19 @@
+{
+    "name": "smartinus44/phpfilemerger",
+    "description": "Merge multiple PHP file into one in PHP, I have used this script for Codingame.",
+    "license": "MIT",
+    "authors": [{
+        "name": "Sylvain MARTIN",
+        "email": "sylvain.martin-44@laposte.net"
+    }],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    },
+    "autoload": {
+        "classmap": [
+            "bin/",
+            "bin/Adapters/"
+        ]
+    }
+}
