@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace PhpFileMerger\tests;
 
@@ -14,7 +14,7 @@ class ProgramTest extends TestCase
      * @var FileGetContentsAdapter
      */
     public $fileGetContentsWrapper;
-    
+
     /**
     * @var GlobAdapter
     */
@@ -33,8 +33,9 @@ class ProgramTest extends TestCase
 
         parent::setUp();
     }
- 
-    public function testReplaceOpenTag() {
+
+    public function testReplaceOpenTag()
+    {
 
         $someSimulatedJson = '<?php //toto';
         $this->fileGetContentsWrapper->method('fileGetContents')->willReturn($someSimulatedJson);
@@ -43,7 +44,8 @@ class ProgramTest extends TestCase
         $this->assertEquals(" //toto\n", $result);
     }
 
-    public function testReplaceTabsWork() {
+    public function testReplaceTabsWork()
+    {
 
         $string = "\t\t\t\t";
         $result = $this->program->replaceTabs($string);
@@ -51,7 +53,8 @@ class ProgramTest extends TestCase
         $this->assertEquals("                ", $result);
     }
 
-    public function testRemoveCommentWork() {
+    public function testRemoveCommentWork()
+    {
 
         $string = "/**
         *
@@ -63,7 +66,8 @@ class ProgramTest extends TestCase
         $this->assertEquals("", $result);
     }
 
-    public function testRemoveCommentDontWork() {
+    public function testRemoveCommentDontWork()
+    {
 
         $string = "/*sss
         =>*/";
@@ -72,7 +76,8 @@ class ProgramTest extends TestCase
         $this->assertNotEquals(" ", $result);
     }
 
-    public function testReplaceTabsDontWork() {
+    public function testReplaceTabsDontWork()
+    {
 
         $string = "\t\t\t";
         $result = $this->program->replaceTabs($string);
@@ -80,23 +85,23 @@ class ProgramTest extends TestCase
         $this->assertNotEquals("                ", $result);
     }
 
-    public function testGetFilesWork() {
+    public function testGetFilesWork()
+    {
 
-        $someSimulatedJson = ['1.php','2.php'];
+        $someSimulatedJson = ['1.php', '2.php'];
         $this->globWrapper->method('globDir')->willReturn($someSimulatedJson);
         $result = $this->program->getFiles('toto');
 
         $this->assertEquals($someSimulatedJson, $result);
     }
 
-    public function testGetFilesDontWork() {
+    public function testGetFilesDontWork()
+    {
 
         $someSimulatedJson = [];
         $this->globWrapper->method('globDir')->willReturn($someSimulatedJson);
         $result = $this->program->getFiles('toto');
         $this->assertIsArray($result);
         $this->assertEmpty($result);
-
     }
-
 }

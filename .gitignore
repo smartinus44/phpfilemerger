@@ -1,4 +1,4 @@
 src/*
-prod/*
+public/*
 .DS_Store
 vendor
