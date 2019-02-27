@@ -1,9 +1,29 @@
 <?php
+/**
+ * Program
+ * PHP version 7.1
+ * 
+ * @category  PHP
+ * @package   Phpfilemerger
+ * @author    Sylvain MARTIN <sylvain.martin-44@laposte.net>
+ * @copyright 2019 Sylvain MARTIN
+ * @license   https://opensource.org/licenses/mit-license.php MIT
+ * @version   GIT: <git_id>
+ * @link      _
+ */
 namespace PhpFileMerger\bin;
 
 use PhpFileMerger\bin\Adapters\FileGetContentsAdapter;
 use PhpFileMerger\bin\Adapters\GlobAdapter;
-
+/**
+ * Program
+ * 
+ * @category PHP
+ * @package  Phpfilemerger
+ * @author   Sylvain MARTIN <sylvain.martin-44@laposte.net>
+ * @license  https://opensource.org/licenses/mit-license.php MIT
+ * @link     _
+ */
 class Program
 {
 
@@ -12,35 +32,56 @@ class Program
     const PUBLIC_FOLDER = 'public';
 
     /**
-	 * @var FileGetContentsAdapter
-	 */
-    private $fileGetContentsAdapter;
+     * An adapter
+     * 
+     * @var FileGetContentsAdapter
+     */
+    private $_fileGetContentsAdapter;
 
     /**
-	 * @var GlobAdapter
-	 */
-    private $globAdapter;
+     * An adapter
+     * 
+     * @var GlobAdapter
+     */
+    private $_globAdapter;
 
-    public function __construct(FileGetContentsAdapter $fileGetContentsAdapter, GlobAdapter $globAdapter)
+    /**
+     * Constructor
+     *
+     * @param FileGetContentsAdapter $content An adapter
+     * @param GlobAdapter            $glob    An adapter
+     */
+    public function __construct(FileGetContentsAdapter $content, GlobAdapter $glob)
     {
-        $this->fileGetContentsAdapter = $fileGetContentsAdapter;
-        $this->globAdapter = $globAdapter;
+        $this->_fileGetContentsAdapter = $content;
+        $this->_globAdapter = $glob;
     }
 
     /**
-	 * @var string
-	 */
+     * The dest file.
+     * 
+     * @var string
+     */
     public static $dest;
 
     /**
-	 * @var array
-	 */
+     * The data inside files.
+     * 
+     * @var array
+     */
     public static $data;
 
+    /**
+     * Run the script.
+     * 
+     * @return void
+     */
     public function run()
     {
 
-        self::$dest = dirname(__FILE__) . self::DS . '..' . self::DS . self::PUBLIC_FOLDER . self::DS . 'index.php';
+        self::$dest = dirname(__FILE__);
+        self::$dest .=  self::DS . '..' . self::DS;
+        self::$dest .=  self::PUBLIC_FOLDER . self::DS . 'index.php';
         echo "The destination is: " . self::$dest . ".\n";
 
         $data = $this->getData();
@@ -57,8 +98,12 @@ class Program
     }
 
     /**
-	 * @var string $data
-	 */
+     * Remove comments.
+     * 
+     * @param string $data Data to process.
+     * 
+     * @return string
+     */
     public function removeComments($data)
     {
         $re = '/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/m';
@@ -67,14 +112,16 @@ class Program
     }
 
     /**
-	 * Get files
-	 * @param string $dir
-	 * @return array
-	 */
+     * Get files
+     *
+     * @param string $dir Dir to merge.
+     * 
+     * @return array
+     */
     public function getFiles($dir)
     {
 
-        $files = $this->globAdapter->globDir($dir);
+        $files = $this->_globAdapter->globDir($dir);
 
         if (count($files) === 0) {
             echo "There is no file to merge.\n";
@@ -83,33 +130,40 @@ class Program
     }
 
     /**
-	 * Remove PHP open Tag
-	 *
-	 * @param string $file
-	 * @return void
-	 */
+     * Remove PHP open Tag
+     *
+     * @param string $file File to process.
+     * 
+     * @return void
+     */
     public function replaceOpenTag($file)
     {
-        return str_replace(self::OPEN_TAG, '', $this->fileGetContentsAdapter->fileGetContents($file)) . PHP_EOL;
+        $content = $this->_fileGetContentsAdapter->fileGetContents($file);
+        return str_replace(self::OPEN_TAG, '', $content) . PHP_EOL;
     }
 
     /**
-	 * @param string $data
-	 */
+     * Replace tabs by space.
+     * 
+     * @param string $data Data to replace.
+     * 
+     * @return string
+     */
     public function replaceTabs($data)
     {
         return str_replace("\t", '    ', $data);
     }
 
     /**
-	 * Get formated data from files
-	 * 
-	 * @return string $data
-	 */
+     * Get formated data from files
+     * 
+     * @return string $data
+     */
     public function getData()
     {
         $data = "";
-        $dir = dirname(__FILE__) . self::DS . '..' . self::DS . 'src' . self::DS . '*.{php}';
+        $dir = dirname(__FILE__) . self::DS . '..' . self::DS;
+        $dir .= 'src' . self::DS . '*.{php}';
         $files = $this->getFiles($dir);
 
         if (empty($files)) {
@@ -124,7 +178,8 @@ class Program
         }
 
         $data = current(self::OPEN_TAG) . PHP_EOL . $data;
-        $data .= $this->replaceOpenTag(dirname(__FILE__) . self::DS . '..' . self::DS . 'app.php');
+        $path = dirname(__FILE__) . self::DS . '..' . self::DS . 'app.php';
+        $data .= $this->replaceOpenTag($path);
 
         $data = $this->replaceTabs($data);
 

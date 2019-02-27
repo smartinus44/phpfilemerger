@@ -1,4 +1,16 @@
 <?php
+/**
+ * ProgramTest
+ * PHP version 7.1
+ * 
+ * @category  PHP
+ * @package   Phpfilemerger
+ * @author    Sylvain MARTIN <sylvain.martin-44@laposte.net>
+ * @copyright 2019 Sylvain MARTIN
+ * @license   https://opensource.org/licenses/mit-license.php MIT
+ * @version   GIT: <git_id>
+ * @link      _
+ */
 declare (strict_types = 1);
 
 namespace PhpFileMerger\tests;
@@ -7,43 +19,73 @@ use PHPUnit\Framework\TestCase;
 use PhpFileMerger\bin\Program;
 use PhpFileMerger\bin\Adapters\FileGetContentsAdapter;
 use PhpFileMerger\bin\Adapters\GlobAdapter;
-
+/**
+ * ProgramTest
+ * 
+ * @category PHP
+ * @package  Phpfilemerger
+ * @author   Sylvain MARTIN <sylvain.martin-44@laposte.net>
+ * @license  https://opensource.org/licenses/mit-license.php MIT
+ * @link     _
+ */
 class ProgramTest extends TestCase
 {
     /**
+     * An adapter.
+     * 
      * @var FileGetContentsAdapter
      */
-    public $fileGetContentsWrapper;
+    public $contentWrapper;
 
     /**
-    * @var GlobAdapter
-    */
+     * An adapter.
+     * 
+     * @var GlobAdapter
+     */
     public $globWrapper;
 
     /**
+     * The program to test.
+     * 
      * @var Program
      */
     public $program;
 
+    /**
+     * Setup
+     * 
+     * @return void
+     */
     protected function setUp()
     {
-        $this->fileGetContentsWrapper = $this->createMock(FileGetContentsAdapter::class);
+        $this->contentWrapper = $this->createMock(FileGetContentsAdapter::class);
         $this->globWrapper = $this->createMock(GlobAdapter::class);
-        $this->program = (new Program($this->fileGetContentsWrapper, $this->globWrapper));
+        $this->program = (new Program($this->contentWrapper, $this->globWrapper));
 
         parent::setUp();
     }
 
+    /**
+     * Test testReplaceOpenTag 
+     * 
+     * @return void
+     */
     public function testReplaceOpenTag()
     {
-
         $someSimulatedJson = '<?php //toto';
-        $this->fileGetContentsWrapper->method('fileGetContents')->willReturn($someSimulatedJson);
+        $this->contentWrapper
+            ->method('fileGetContents')
+            ->willReturn($someSimulatedJson);
         $result = $this->program->replaceOpenTag('toto');
 
         $this->assertEquals(" //toto\n", $result);
     }
 
+    /**
+     * Test testReplaceTabsWork
+     * 
+     * @return void
+     */
     public function testReplaceTabsWork()
     {
 
@@ -53,6 +95,11 @@ class ProgramTest extends TestCase
         $this->assertEquals("                ", $result);
     }
 
+    /**
+     * Test testRemoveCommentWork
+     * 
+     * @return void
+     */
     public function testRemoveCommentWork()
     {
 
@@ -66,6 +113,11 @@ class ProgramTest extends TestCase
         $this->assertEquals("", $result);
     }
 
+    /**
+     * Test testRemoveCommentDontWork
+     * 
+     * @return void
+     */
     public function testRemoveCommentDontWork()
     {
 
@@ -76,6 +128,11 @@ class ProgramTest extends TestCase
         $this->assertNotEquals(" ", $result);
     }
 
+    /**
+     * Test testReplaceTabsDontWork
+     * 
+     * @return void
+     */
     public function testReplaceTabsDontWork()
     {
 
@@ -85,6 +142,11 @@ class ProgramTest extends TestCase
         $this->assertNotEquals("                ", $result);
     }
 
+    /**
+     * Test testGetFilesWork
+     * 
+     * @return void
+     */
     public function testGetFilesWork()
     {
 
@@ -95,6 +157,11 @@ class ProgramTest extends TestCase
         $this->assertEquals($someSimulatedJson, $result);
     }
 
+    /**
+     * Test testGetFilesDontWork
+     * 
+     * @return void
+     */
     public function testGetFilesDontWork()
     {
 
