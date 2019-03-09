@@ -15,6 +15,7 @@ namespace PhpFileMerger\bin;
 
 use PhpFileMerger\bin\Adapters\FileGetContentsAdapter;
 use PhpFileMerger\bin\Adapters\GlobAdapter;
+
 /**
  * Program
  * 
@@ -30,6 +31,8 @@ class Program
     const OPEN_TAG = ['<?php', '<?'];
     const DS = '/';
     const PUBLIC_FOLDER = 'public';
+    const SRC_FOLDER = 'src';
+    const PROJECT_ROOT = __DIR__ . self::DS . '..' .  self::DS . '..' . self::DS . '..' . self::DS . '..' .  self::DS;
 
     /**
      * An adapter
@@ -55,6 +58,14 @@ class Program
     {
         $this->_fileGetContentsAdapter = $content;
         $this->_globAdapter = $glob;
+
+        if (!file_exists(self::PROJECT_ROOT . self::PUBLIC_FOLDER)) {
+            mkdir(self::PROJECT_ROOT . self::PUBLIC_FOLDER, '0755');
+        }
+
+        if (!file_exists(self::PROJECT_ROOT . self::SRC_FOLDER)) {
+            mkdir(self::PROJECT_ROOT . self::SRC_FOLDER, '0755');
+        }
     }
 
     /**
@@ -79,9 +90,7 @@ class Program
     public function run()
     {
 
-        self::$dest = dirname(__FILE__);
-        self::$dest .=  self::DS . '..' . self::DS;
-        self::$dest .=  self::PUBLIC_FOLDER . self::DS . 'index.php';
+        self::$dest =  self::PROJECT_ROOT . self::PUBLIC_FOLDER . self::DS . 'index.php';
         echo "The destination is: " . self::$dest . ".\n";
 
         $data = $this->getData();
@@ -162,8 +171,7 @@ class Program
     public function getData()
     {
         $data = "";
-        $dir = __DIR__ . self::DS . '..' .  self::DS . '..' . self::DS . '..' . self::DS . '..' .  self::DS;
-        $dir .= 'src' . self::DS . '*.{php}';
+        $dir = self::PROJECT_ROOT . self::SRC_FOLDER . self::DS . '*.{php}';
         $files = $this->getFiles($dir);
 
         if (empty($files)) {
