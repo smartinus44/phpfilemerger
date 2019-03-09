@@ -11,7 +11,7 @@
  * @version   GIT: <git_id>
  * @link      _
  */
-require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/../../../autoload.php';
 
 use PhpFileMerger\bin\Adapters\FileGetContentsAdapter;
 use PhpFileMerger\bin\Program;
