@@ -162,7 +162,7 @@ class Program
     public function getData()
     {
         $data = "";
-        $dir = dirname(__FILE__) . self::DS . '..' . self::DS;
+        $dir = __DIR__ . self::DS . '..' .  self::DS . '..' . self::DS . '..' . self::DS . '..' .  self::DS;
         $dir .= 'src' . self::DS . '*.{php}';
         $files = $this->getFiles($dir);
 

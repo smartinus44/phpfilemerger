@@ -1,5 +1,6 @@
 {
     "name": "smartinus44/phpfilemerger",
+    "type": "library",
     "description": "Merge multiple PHP file into one in PHP, I have used this script for Codingame.",
     "license": "MIT",
     "authors": [{
